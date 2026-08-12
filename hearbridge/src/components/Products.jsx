@@ -14,7 +14,7 @@ function Products() {
           <div className="pro" key={product.name}>
             <img src={product.img} alt="" />
             <div className="des">
-              <span>{product.brand}</span>
+              <span>{product.name}</span>
             </div>
           </div>
         ))}

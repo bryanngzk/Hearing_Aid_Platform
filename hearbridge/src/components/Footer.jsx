@@ -2,7 +2,7 @@ function Footer() {
   return (
     <footer className="section-p1">
       <div className="col">
-        <img className="logo" src="/img/SSLogo.png" alt="" />
+        <img className="logo" src="/public/hearbridge_icon.svg" alt="" />
         <h4>Contact</h4>
         <div className="follow">
           <h4>Follow Us</h4>
