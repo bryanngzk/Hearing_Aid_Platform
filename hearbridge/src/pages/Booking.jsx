@@ -1,12 +1,6 @@
 import { useState } from 'react'
 import { bookings, statusMeta } from '../data/bookings.js'
-
-const tabs = [
-  { key: 'all', label: 'All' },
-  { key: 'upcoming', label: 'Upcoming' },
-  { key: 'completed', label: 'Completed' },
-  { key: 'cancelled', label: 'Cancelled' },
-];
+import tabs from '../data/tabs.js'
 
 function Booking() {
   const [activeTab, setActiveTab] = useState('all');

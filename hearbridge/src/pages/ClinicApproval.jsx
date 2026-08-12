@@ -5,6 +5,7 @@ import { collection, doc, getDoc, getDocs, orderBy, query } from 'firebase/fires
 import { auth, db } from '../firebase'
 import { conditionClass } from '../data/products.js'
 
+// To access this page, on the link insert '/clinic-approval'
 function formatDate(timestamp) {
   if (!timestamp) return 'Just now';
   return timestamp.toDate().toLocaleDateString('en-GB', {
