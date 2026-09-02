@@ -1226,6 +1226,127 @@ footer a:hover {
     margin: -10px 0 15px 0;
 }
 
+/* Appointments Page */
+
+#appointments .appointment-banner {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 16px;
+    background: #e8f6ea;
+    color: #088178;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+#appointments .appointment-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    margin-top: 20px;
+}
+
+#appointments .appointment-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+}
+
+#appointments .appointment-field label,
+#appointments .appointment-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+}
+
+#appointments .appointment-field input[type="date"],
+#appointments .appointment-field select {
+    padding: 12px 15px;
+    font-size: 14px;
+    border: 1px solid #cce7d0;
+    border-radius: 4px;
+    outline: none;
+}
+
+#appointments .appointment-field input[type="date"]:focus,
+#appointments .appointment-field select:focus {
+    border-color: #088178;
+}
+
+#appointments .appointment-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#appointments .appointment-slot {
+    border: 1px solid #cce7d0;
+    background: #fff;
+    color: #1a1a1a;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+#appointments .appointment-slot:hover:not(:disabled) {
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+#appointments .appointment-slot.selected {
+    background: #088178;
+    color: #fff;
+    border-color: #088178;
+}
+
+#appointments .appointment-slot:disabled {
+    background: #f1f1f1;
+    color: #a0a0a3;
+    border-color: #eee;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+#appointments .appointment-error {
+    font-size: 13px;
+    color: #c0392b;
+    margin: -10px 0 15px 0;
+}
+
+#appointments .appointment-success {
+    text-align: center;
+    padding: 40px 0;
+}
+
+#appointments .appointment-success i {
+    font-size: 40px;
+    color: #088178;
+    margin-bottom: 15px;
+}
+
+#appointments .appointment-ref {
+    font-size: 18px;
+    padding: 10px 16px;
+    background: #e8f6ea;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+#appointments .appointment-submit {
+    align-self: flex-start;
+    background-color: #088178;
+    color: #fff;
+}
+
+#appointments .appointment-success-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
 /* Clinic Approval Page */
 
 #clinic-approval .clinic-search {
@@ -1344,6 +1465,394 @@ footer a:hover {
 #clinic-approval .clinic-status-rejected {
     background: #fbe7e7;
     color: #c0392b;
+}
+
+#clinic-approval .clinic-view-link {
+    display: block;
+    margin-top: 10px;
+    color: #088178;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+#clinic-approval .clinic-coupon-field {
+    display: flex;
+    flex-direction: column;
+    margin-top: 14px;
+}
+
+#clinic-approval .clinic-coupon-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+}
+
+#clinic-approval .clinic-coupon-field input {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #cce7d0;
+    border-radius: 4px;
+    outline: none;
+}
+
+#clinic-approval .clinic-coupon-field input:focus {
+    border-color: #088178;
+}
+
+#clinic-approval .clinic-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+#clinic-approval .clinic-card-actions button {
+    flex: 1;
+    padding: 8px 0;
+    font-size: 13px;
+}
+
+#clinic-approval .clinic-approve {
+    background: #088178;
+    color: #fff;
+}
+
+#clinic-approval .clinic-reject {
+    background: #fff;
+    color: #c0392b;
+    border: 1px solid #c0392b;
+}
+
+#clinic-approval .clinic-card-actions button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#clinic-approval .clinic-error {
+    margin-top: 16px;
+    color: #c0392b;
+    font-size: 14px;
+}
+
+/* Trade-In Detail Page */
+
+#trade-in-detail .trade-in-detail-back {
+    display: inline-block;
+    margin-bottom: 15px;
+    color: #088178;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+#trade-in-detail .trade-in-detail-back i {
+    margin-right: 6px;
+}
+
+#trade-in-detail .trade-in-detail-card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+#trade-in-detail .trade-in-detail-photos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-width: 400px;
+    align-content: flex-start;
+}
+
+#trade-in-detail .trade-in-detail-photos img {
+    width: 190px;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #cce7d0;
+}
+
+#trade-in-detail .trade-in-detail-no-photo {
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    color: #606063;
+    font-size: 13px;
+    background: #f7f7f7;
+    border-radius: 12px;
+}
+
+#trade-in-detail .trade-in-detail-des {
+    flex: 1;
+    min-width: 260px;
+    text-align: start;
+}
+
+#trade-in-detail .trade-in-detail-id {
+    font-size: 12px;
+    color: #606063;
+    font-weight: 600;
+}
+
+#trade-in-detail .trade-in-detail-des h2 {
+    padding: 6px 0 12px 0;
+    color: #1a1a1a;
+}
+
+#trade-in-detail .listing-condition {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+#trade-in-detail .condition-excellent {
+    background-color: #e8f6ea;
+    color: #088178;
+}
+
+#trade-in-detail .condition-very-good {
+    background-color: #eaf3ff;
+    color: #2b6bd1;
+}
+
+#trade-in-detail .condition-good {
+    background-color: #fff6e0;
+    color: #b9871a;
+}
+
+#trade-in-detail .condition-acceptable {
+    background-color: #fdeee0;
+    color: #c4711a;
+}
+
+#trade-in-detail .condition-refurbished {
+    background-color: #f1f1f1;
+    color: #606063;
+}
+
+#trade-in-detail .trade-in-detail-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+#trade-in-detail .trade-in-detail-status.status-pending {
+    background: #fff6e0;
+    color: #b9871a;
+}
+
+#trade-in-detail .trade-in-detail-status.status-approved {
+    background: #e8f6ea;
+    color: #088178;
+}
+
+#trade-in-detail .trade-in-detail-status.status-rejected {
+    background: #fbe7e7;
+    color: #c0392b;
+}
+
+#trade-in-detail .trade-in-detail-donor {
+    padding-top: 16px;
+}
+
+#trade-in-detail .trade-in-detail-donor p {
+    font-size: 14px;
+    color: #606063;
+    margin: 4px 0;
+}
+
+#trade-in-detail .trade-in-detail-donor i {
+    color: #088178;
+    margin-right: 6px;
+    width: 14px;
+}
+
+#trade-in-detail .trade-in-detail-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    max-width: 320px;
+}
+
+#trade-in-detail .trade-in-detail-actions button {
+    flex: 1;
+    padding: 10px 0;
+    font-size: 14px;
+}
+
+#trade-in-detail .trade-in-detail-actions button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#trade-in-detail .trade-in-detail-approve {
+    background: #088178;
+    color: #fff;
+}
+
+#trade-in-detail .trade-in-detail-reject {
+    background: #fff;
+    color: #c0392b;
+    border: 1px solid #c0392b;
+}
+
+#trade-in-detail .trade-in-detail-note {
+    margin-top: 16px;
+    color: #606063;
+}
+
+#trade-in-detail .trade-in-detail-listing {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin-top: 20px;
+}
+
+#trade-in-detail .trade-in-detail-listing h4 {
+    margin-bottom: 10px;
+}
+
+#trade-in-detail .trade-in-detail-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+#trade-in-detail .trade-in-detail-field label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+}
+
+#trade-in-detail .trade-in-detail-field input,
+#trade-in-detail .trade-in-detail-field textarea {
+    padding: 12px 15px;
+    font-size: 14px;
+    font-family: inherit;
+    border: 1px solid #cce7d0;
+    border-radius: 4px;
+    outline: none;
+    resize: vertical;
+}
+
+#trade-in-detail .trade-in-detail-field input:focus,
+#trade-in-detail .trade-in-detail-field textarea:focus {
+    border-color: #088178;
+}
+
+#trade-in-detail .trade-in-detail-error {
+    font-size: 13px;
+    color: #c0392b;
+    margin: -10px 0 15px 0;
+}
+
+#trade-in-detail .trade-in-detail-saved {
+    font-size: 13px;
+    color: #088178;
+    margin: -10px 0 15px 0;
+}
+
+#trade-in-detail .trade-in-detail-submit {
+    align-self: flex-start;
+    background-color: #088178;
+    color: #fff;
+}
+
+/* Redeem Coupon Page */
+
+#redeem-coupon .redeem-coupon-search {
+    display: flex;
+    gap: 10px;
+    max-width: 500px;
+    padding: 10px 0 20px 0;
+}
+
+#redeem-coupon .redeem-coupon-search input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #d5d5d5;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+#redeem-coupon .redeem-coupon-search input:focus {
+    border-color: #088178;
+}
+
+#redeem-coupon .redeem-coupon-empty {
+    color: #606063;
+}
+
+#redeem-coupon .redeem-coupon-error {
+    color: #c0392b;
+    font-size: 14px;
+    margin-top: -10px;
+}
+
+#redeem-coupon .redeem-coupon-card {
+    max-width: 400px;
+    padding: 20px;
+    border: 1px solid #cce7d0;
+    border-radius: 20px;
+    box-shadow: 20px 20px 30px rgba(0, 0, 0, 0.02);
+}
+
+#redeem-coupon .redeem-coupon-card h4 {
+    padding: 8px 0;
+    font-size: 22px;
+    color: #088178;
+}
+
+#redeem-coupon .redeem-coupon-card p {
+    font-size: 14px;
+    color: #606063;
+    margin: 4px 0;
+}
+
+#redeem-coupon .redeem-coupon-card i {
+    color: #088178;
+    margin-right: 6px;
+    width: 14px;
+}
+
+#redeem-coupon .redeem-coupon-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+#redeem-coupon .redeem-coupon-status.status-active {
+    background: #e8f6ea;
+    color: #088178;
+}
+
+#redeem-coupon .redeem-coupon-status.status-redeemed {
+    background: #f1f1f1;
+    color: #606063;
+}
+
+#redeem-coupon .redeem-coupon-redeemed-note {
+    margin-top: 10px;
+    font-style: italic;
+}
+
+#redeem-coupon .redeem-coupon-btn {
+    margin-top: 14px;
+    background-color: #088178;
+    color: #fff;
+    padding: 10px 24px;
+    font-size: 14px;
 }
 
 /* Listing Page */
@@ -1543,6 +2052,31 @@ footer a:hover {
     color: #c0392b;
 }
 
+#profile .profile-tradeins {
+    max-width: 700px;
+    margin-top: 30px;
+}
+
+#profile .booking-status.status-pending {
+    background: #fdf3e0;
+    color: #b9770e;
+}
+
+#profile .booking-status.status-approved {
+    background: #e8f6ea;
+    color: #088178;
+}
+
+#profile .booking-status.status-rejected {
+    background: #fbe7e7;
+    color: #c0392b;
+}
+
+#profile .profile-coupons {
+    max-width: 700px;
+    margin-top: 30px;
+}
+
 /* Product Detail Page */
 
 #product-detail .product-detail-card {
@@ -1575,6 +2109,14 @@ footer a:hover {
 #product-detail .product-detail-des h2 {
     padding: 6px 0 12px 0;
     color: #1a1a1a;
+}
+
+#product-detail .product-detail-price {
+    display: block;
+    margin-top: 12px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #088178;
 }
 
 #product-detail .product-detail-description {
@@ -1983,7 +2525,7 @@ footer a:hover {
     #subtotal {
         padding: 20px;
     }
-    /* SIngle Product */
+    /* Single Product */
     #prodetails {
         flex-direction: column;
     }

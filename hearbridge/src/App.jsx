@@ -11,6 +11,8 @@ import Login from './pages/Login.jsx'
 import SignUp from './pages/SignUp.jsx'
 import Profile from './pages/Profile.jsx'
 import ClinicApproval from './pages/ClinicApproval.jsx'
+import TradeInDetail from './pages/TradeInDetail.jsx'
+import RedeemCoupon from './pages/RedeemCoupon.jsx'
 
 function App() {
   return (
@@ -21,11 +23,14 @@ function App() {
         <Route path="/listings" element={<Listing />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/booking" element={<Booking />} />
+        <Route path="/booking/new" element={<Appointments />} />
         <Route path="/trade-in" element={<TradeIn />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/clinic-approval" element={<ClinicApproval />} />
+        <Route path="/clinic-approval/:tradeInId" element={<TradeInDetail />} />
+        <Route path="/redeem-coupon" element={<RedeemCoupon />} />
       </Routes>
       <Footer />
     </>

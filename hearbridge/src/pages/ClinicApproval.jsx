@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { onAuthStateChanged } from 'firebase/auth'
-import { collection, doc, getDoc, getDocs, orderBy, query } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../firebase'
 import { conditionClass } from '../data/products.js'
+import { generateCouponCode } from '../data/coupons.js'
 
 // To access this page, on the link insert '/clinic-approval'
 function formatDate(timestamp) {
@@ -23,6 +24,9 @@ function ClinicApproval() {
   const [tradeIns, setTradeIns] = useState([]);
   const [loadingTradeIns, setLoadingTradeIns] = useState(true);
   const [searchId, setSearchId] = useState('');
+  const [updatingId, setUpdatingId] = useState('');
+  const [updateError, setUpdateError] = useState('');
+  const [couponPercents, setCouponPercents] = useState({});
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -48,6 +52,43 @@ function ClinicApproval() {
       })
       .finally(() => setLoadingTradeIns(false));
   }, [isClinic]);
+
+  const handleDecision = async (tradeInId, status, couponPercent = 0) => {
+    setUpdateError('');
+    setUpdatingId(tradeInId);
+    try {
+      await updateDoc(doc(db, 'tradeIns', tradeInId), {
+        status,
+        reviewedBy: user.uid,
+        reviewedAt: serverTimestamp(),
+      });
+
+      if (status === 'approved' && couponPercent > 0) {
+        const tradeIn = tradeIns.find((t) => t.id === tradeInId);
+        await setDoc(doc(db, 'coupons', generateCouponCode()), {
+          donorId: tradeIn.donorId,
+          donorName: tradeIn.donorName,
+          donorEmail: tradeIn.donorEmail,
+          tradeInId,
+          deviceModel: tradeIn.deviceModel,
+          condition: tradeIn.condition,
+          percentOff: couponPercent,
+          status: 'active',
+          createdAt: serverTimestamp(),
+        });
+      }
+
+      setTradeIns((current) =>
+        current.map((tradeIn) =>
+          tradeIn.id === tradeInId ? { ...tradeIn, status } : tradeIn
+        )
+      );
+    } catch {
+      setUpdateError('Could not update this trade-in. Please try again.');
+    } finally {
+      setUpdatingId('');
+    }
+  };
 
   if (!authChecked) {
     return (
@@ -126,10 +167,55 @@ function ClinicApproval() {
               <span className={`clinic-status clinic-status-${tradeIn.status}`}>
                 {tradeIn.status}
               </span>
+
+              <Link to={`/clinic-approval/${tradeIn.id}`} className="clinic-view-link">
+                View Item
+              </Link>
+
+              {tradeIn.status === 'pending' && (
+                <>
+                  <div className="clinic-coupon-field">
+                    <label htmlFor={`coupon-${tradeIn.id}`}>Coupon % (optional)</label>
+                    <input
+                      id={`coupon-${tradeIn.id}`}
+                      type="number"
+                      min="0"
+                      max="100"
+                      placeholder="e.g. 10"
+                      value={couponPercents[tradeIn.id] ?? ''}
+                      onChange={(e) =>
+                        setCouponPercents((current) => ({ ...current, [tradeIn.id]: e.target.value }))
+                      }
+                    />
+                  </div>
+                  <div className="clinic-card-actions">
+                    <button
+                      type="button"
+                      className="normal clinic-approve"
+                      disabled={updatingId === tradeIn.id}
+                      onClick={() =>
+                        handleDecision(tradeIn.id, 'approved', parseFloat(couponPercents[tradeIn.id]) || 0)
+                      }
+                    >
+                      Approve
+                    </button>
+                    <button
+                      type="button"
+                      className="normal clinic-reject"
+                      disabled={updatingId === tradeIn.id}
+                      onClick={() => handleDecision(tradeIn.id, 'rejected')}
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         ))}
       </div>
+
+      {updateError && <p className="clinic-error">{updateError}</p>}
     </section>
   );
 }

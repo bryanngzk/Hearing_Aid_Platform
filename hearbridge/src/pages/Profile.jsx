@@ -1,9 +1,22 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { onAuthStateChanged, sendPasswordResetEmail, signOut } from 'firebase/auth'
-import { doc, getDoc } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore'
 import { auth, db } from '../firebase'
-import { bookings, statusMeta } from '../data/bookings.js'
+import { statusMeta } from '../data/bookings.js'
+import { tradeInStatusMeta } from '../data/tradeIns.js'
+import { couponStatusMeta } from '../data/coupons.js'
+
+const RECENT_LIMIT = 3;
+
+function formatDate(timestamp) {
+  if (!timestamp) return '—';
+  return timestamp.toDate().toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+}
 
 function Profile() {
   const [authChecked, setAuthChecked] = useState(false);
@@ -12,6 +25,12 @@ function Profile() {
   const [resetStatus, setResetStatus] = useState('');
   const [resetLoading, setResetLoading] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+  const [tradeIns, setTradeIns] = useState([]);
+  const [loadingTradeIns, setLoadingTradeIns] = useState(true);
+  const [bookings, setBookings] = useState([]);
+  const [loadingBookings, setLoadingBookings] = useState(true);
+  const [coupons, setCoupons] = useState([]);
+  const [loadingCoupons, setLoadingCoupons] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,6 +48,42 @@ function Profile() {
 
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    getDocs(query(collection(db, 'tradeIns'), where('donorId', '==', user.uid)))
+      .then((snapshot) => {
+        const items = snapshot.docs.map((tradeInDoc) => ({ id: tradeInDoc.id, ...tradeInDoc.data() }));
+        items.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+        setTradeIns(items);
+      })
+      .finally(() => setLoadingTradeIns(false));
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    getDocs(query(collection(db, 'bookings'), where('userId', '==', user.uid)))
+      .then((snapshot) => {
+        const items = snapshot.docs.map((bookingDoc) => ({ id: bookingDoc.id, ...bookingDoc.data() }));
+        items.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+        setBookings(items.slice(0, RECENT_LIMIT));
+      })
+      .finally(() => setLoadingBookings(false));
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    getDocs(query(collection(db, 'coupons'), where('donorId', '==', user.uid)))
+      .then((snapshot) => {
+        const items = snapshot.docs.map((couponDoc) => ({ id: couponDoc.id, ...couponDoc.data() }));
+        items.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+        setCoupons(items);
+      })
+      .finally(() => setLoadingCoupons(false));
+  }, [user]);
 
   const handleChangePassword = async () => {
     setResetStatus('');
@@ -116,13 +171,74 @@ function Profile() {
           <Link to="/booking" className="profile-bookings-link">View All</Link>
         </div>
 
+        {loadingBookings && <p>Loading bookings...</p>}
+
+        {!loadingBookings && bookings.length === 0 && (
+          <p>You haven't booked any appointments yet.</p>
+        )}
+
         {bookings.map((booking) => {
           const meta = statusMeta[booking.status];
           return (
             <div className="profile-booking-row" key={booking.id}>
               <div className="profile-booking-info">
-                <h5>{booking.service}</h5>
-                <p>{booking.provider} · {booking.date} at {booking.time}</p>
+                <h5>{booking.productLabel || 'Hearing Aid Viewing'}</h5>
+                <p>{booking.clinicName} · {booking.date} at {booking.time}</p>
+              </div>
+              <span className={`booking-status ${meta.className}`}>
+                <i className={`fa-solid ${meta.icon}`}></i> {meta.label}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="profile-tradeins">
+        <div className="profile-bookings-header">
+          <h4>Trade-In History</h4>
+          <Link to="/trade-in" className="profile-bookings-link">New Trade-In</Link>
+        </div>
+
+        {loadingTradeIns && <p>Loading trade-ins...</p>}
+
+        {!loadingTradeIns && tradeIns.length === 0 && (
+          <p>You haven't submitted any trade-ins yet.</p>
+        )}
+
+        {tradeIns.map((tradeIn) => {
+          const meta = tradeInStatusMeta[tradeIn.status] || tradeInStatusMeta.pending;
+          return (
+            <div className="profile-booking-row" key={tradeIn.id}>
+              <div className="profile-booking-info">
+                <h5>{tradeIn.deviceModel}</h5>
+                <p>{tradeIn.condition} · Submitted {formatDate(tradeIn.createdAt)}</p>
+              </div>
+              <span className={`booking-status ${meta.className}`}>
+                <i className={`fa-solid ${meta.icon}`}></i> {meta.label}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="profile-coupons">
+        <div className="profile-bookings-header">
+          <h4>My Coupons</h4>
+        </div>
+
+        {loadingCoupons && <p>Loading coupons...</p>}
+
+        {!loadingCoupons && coupons.length === 0 && (
+          <p>You don't have any coupons yet.</p>
+        )}
+
+        {coupons.map((coupon) => {
+          const meta = couponStatusMeta[coupon.status] || couponStatusMeta.active;
+          return (
+            <div className="profile-booking-row" key={coupon.id}>
+              <div className="profile-booking-info">
+                <h5>{coupon.percentOff}% off &middot; {coupon.deviceModel}</h5>
+                <p>Code: {coupon.id}</p>
               </div>
               <span className={`booking-status ${meta.className}`}>
                 <i className={`fa-solid ${meta.icon}`}></i> {meta.label}

@@ -36,7 +36,7 @@ const slides = [
     title: 'Not sure what fits you? Book a',
     highlight: 'free hearing consultation today',
     text: 'Our specialists will help you find the right device.',
-    cta: { label: 'Book Now', to: '/booking' },
+    cta: { label: 'Book Now', to: '/listings' },
   },
 ];
 

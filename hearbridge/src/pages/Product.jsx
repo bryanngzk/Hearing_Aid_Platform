@@ -26,9 +26,11 @@ function Product() {
             {product.condition}
           </span>
 
+          <span className="product-detail-price">£{product.price.toFixed(2)}</span>
+
           <p className="product-detail-description">{product.description}</p>
             
-          <Link to="/booking" className="normal product-detail-book">
+          <Link to={`/booking/new?product=${product.id}`} className="normal product-detail-book">
             Book Now
           </Link>
 
