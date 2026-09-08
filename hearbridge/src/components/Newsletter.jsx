@@ -1,3 +1,4 @@
+// Newsletter sign-up strip at the bottom of the homepage
 function Newsletter() {
   return (
     <section id="newsletter" className="section-p1 section-m1">

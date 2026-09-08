@@ -5,6 +5,7 @@ const products = [
   { img: "/img/products/2.jpg", name: "Hansaton" },
 ];
 
+// Shows the "Featured Brands" row on the homepage
 function Products() {
   return ( 
     <section id="product1" className="section-p1">

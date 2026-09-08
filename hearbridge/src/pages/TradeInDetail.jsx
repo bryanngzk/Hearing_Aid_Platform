@@ -6,6 +6,7 @@ import { auth, db } from '../firebase'
 import { conditionClass } from '../data/products.js'
 import { generateCouponCode } from '../data/coupons.js'
 
+// Turns a Firestore timestamp into a readable UK date, e.g. "05 Sep 2026"
 function formatDate(timestamp) {
   if (!timestamp) return 'Just now';
   return timestamp.toDate().toLocaleDateString('en-GB', {
@@ -15,6 +16,7 @@ function formatDate(timestamp) {
   });
 }
 
+// Clinic-only page for one trade-in: approve/reject it and publish it as a listing
 function TradeInDetail() {
   const { tradeInId } = useParams();
 
@@ -29,6 +31,7 @@ function TradeInDetail() {
   const [statusError, setStatusError] = useState('');
   const [couponPercent, setCouponPercent] = useState('');
 
+  const [brand, setBrand] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [saving, setSaving] = useState(false);
@@ -63,8 +66,15 @@ function TradeInDetail() {
         }
       })
       .finally(() => setLoadingTradeIn(false));
+
+    getDoc(doc(db, 'listings', tradeInId)).then((snapshot) => {
+      if (snapshot.exists()) {
+        setBrand(snapshot.data().brand || '');
+      }
+    });
   }, [isClinic, tradeInId]);
 
+  // Approves or rejects the trade-in, issuing a coupon if a percentage was entered
   const handleDecision = async (status) => {
     setStatusError('');
     setUpdatingStatus(true);
@@ -98,6 +108,7 @@ function TradeInDetail() {
     }
   };
 
+  // Saves the price/description on the trade-in and publishes/updates its public listing
   const handleSaveListing = async (e) => {
     e.preventDefault();
     setSaveError('');
@@ -116,6 +127,20 @@ function TradeInDetail() {
         description,
         updatedAt: serverTimestamp(),
       });
+
+      const listingRef = doc(db, 'listings', tradeInId);
+      const listingSnapshot = await getDoc(listingRef);
+      await setDoc(listingRef, {
+        brand,
+        model: tradeIn.deviceModel,
+        condition: tradeIn.condition,
+        image: tradeIn.photos?.[0] || '',
+        price: parsedPrice,
+        description,
+        updatedAt: serverTimestamp(),
+        ...(listingSnapshot.exists() ? {} : { status: 'available', createdAt: serverTimestamp() }),
+      }, { merge: true });
+
       setTradeIn((current) => ({ ...current, price: parsedPrice, description }));
       setSaved(true);
     } catch {
@@ -239,6 +264,18 @@ function TradeInDetail() {
               <h4>Listing Details</h4>
 
               <div className="trade-in-detail-field">
+                <label htmlFor="brand">Brand</label>
+                <input
+                  id="brand"
+                  type="text"
+                  placeholder="e.g. Phonak"
+                  value={brand}
+                  onChange={(e) => setBrand(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="trade-in-detail-field">
                 <label htmlFor="price">Price (£)</label>
                 <input
                   id="price"
@@ -255,7 +292,8 @@ function TradeInDetail() {
                 <label htmlFor="description">Description</label>
                 <textarea
                   id="description"
-                  rows="4"
+                  rows="8"
+                  placeholder={'Condition & History\nAge of Device: ...\nCosmetic condition: ...\nBattery type: ...\n\nTechnical Specifications\nHearing loss range: ...\nCompatibility with Phonak app: ...\n\nThis item has been verified by [Clinic], tested/calibrated with no issues.'}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   required

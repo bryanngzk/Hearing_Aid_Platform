@@ -5,19 +5,34 @@ import {
   collection, doc, documentId, getDoc, getDocs, query, runTransaction, serverTimestamp, where,
 } from 'firebase/firestore'
 import { auth, db } from '../firebase'
-import { getProductById } from '../data/products.js'
 import {
   clinics, generateBookingId, getClinicName, getDaySlots, isClinicOpenOn, isPastSlot,
   slotDocId, todayDateString,
 } from '../data/clinics.js'
 
+// Books a viewing for a specific hearing aid, or reschedules an existing booking
 function Appointments() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const productId = searchParams.get('product');
   const rescheduleId = searchParams.get('reschedule');
-  const product = productId ? getProductById(productId) : null;
-  const requiresProduct = !rescheduleId && !product;
+
+  const [product, setProduct] = useState(null);
+  const [loadingProduct, setLoadingProduct] = useState(Boolean(productId));
+
+  useEffect(() => {
+    if (!productId) {
+      setLoadingProduct(false);
+      return;
+    }
+    getDoc(doc(db, 'listings', productId))
+      .then((snapshot) => {
+        setProduct(snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null);
+      })
+      .finally(() => setLoadingProduct(false));
+  }, [productId]);
+
+  const requiresProduct = !rescheduleId && !loadingProduct && (!product || product.status === 'sold');
 
   useEffect(() => {
     if (requiresProduct) {
@@ -67,6 +82,7 @@ function Appointments() {
       .finally(() => setLoadingExisting(false));
   }, [user, rescheduleId]);
 
+  // Re-checks which time slots are already booked for the chosen clinic and date
   const refreshSlots = useCallback(() => {
     if (!clinicId || !date || !isClinicOpenOn(date)) {
       setTakenTimes(new Set());
@@ -94,6 +110,7 @@ function Appointments() {
     refreshSlots();
   }, [refreshSlots]);
 
+  // Claims the chosen time slot and creates (or reschedules) the booking
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -177,7 +194,7 @@ function Appointments() {
     return null;
   }
 
-  if (!authChecked || loadingExisting) {
+  if (!authChecked || loadingExisting || loadingProduct) {
     return (
       <section id="appointments" className="section-p1">
         <p>Loading...</p>

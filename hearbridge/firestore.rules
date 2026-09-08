@@ -7,6 +7,10 @@ service cloud.firestore {
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'clinic';
     }
 
+    function clinicIdsOf() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.clinicIds;
+    }
+
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
@@ -23,7 +27,13 @@ service cloud.firestore {
       allow create: if request.auth != null &&
         request.auth.uid == request.resource.data.userId &&
         request.resource.data.status == 'upcoming';
-      allow read, update: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow read: if request.auth != null &&
+        (request.auth.uid == resource.data.userId ||
+         (isClinic() && resource.data.clinicId in clinicIdsOf()));
+      allow update: if request.auth != null &&
+        (request.auth.uid == resource.data.userId ||
+         (isClinic() && resource.data.clinicId in clinicIdsOf() &&
+          request.resource.data.status == 'completed'));
       allow delete: if false;
     }
 
@@ -39,6 +49,12 @@ service cloud.firestore {
       allow read: if request.auth != null &&
         (request.auth.uid == resource.data.donorId || isClinic());
       allow update: if isClinic();
+      allow delete: if false;
+    }
+
+    match /listings/{listingId} {
+      allow read: if true;
+      allow create, update: if isClinic();
       allow delete: if false;
     }
   }

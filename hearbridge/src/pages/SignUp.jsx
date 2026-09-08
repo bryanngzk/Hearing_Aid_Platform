@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { doc, setDoc } from 'firebase/firestore'
 import { auth, db } from '../firebase'
 
+// Shows the sign-up form and creates a new patient account
 function SignUp() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -14,6 +15,7 @@ function SignUp() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Creates the Firebase Auth account plus its matching profile document, then logs the user in
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== retypePassword) {

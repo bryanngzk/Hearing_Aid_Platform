@@ -1,3 +1,4 @@
+// Small "why trade in with us" call-to-action banner on the homepage
 function Banner() {
   return (
     <section id="banner" className="section-p1">

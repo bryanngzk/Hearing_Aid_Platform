@@ -16,6 +16,7 @@ function formatDate(timestamp) {
   });
 }
 
+// Clinic-only page listing every trade-in request, with search and quick approve/reject
 function ClinicApproval() {
   const [authChecked, setAuthChecked] = useState(false);
   const [user, setUser] = useState(null);
@@ -53,6 +54,7 @@ function ClinicApproval() {
       .finally(() => setLoadingTradeIns(false));
   }, [isClinic]);
 
+  // Approves or rejects a trade-in, issuing a coupon if a percentage was entered
   const handleDecision = async (tradeInId, status, couponPercent = 0) => {
     setUpdateError('');
     setUpdatingId(tradeInId);

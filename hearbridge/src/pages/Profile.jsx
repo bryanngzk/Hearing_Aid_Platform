@@ -9,6 +9,7 @@ import { couponStatusMeta } from '../data/coupons.js'
 
 const RECENT_LIMIT = 3;
 
+// Turns a Firestore timestamp into a readable UK date, e.g. "05 Sep 2026"
 function formatDate(timestamp) {
   if (!timestamp) return '—';
   return timestamp.toDate().toLocaleDateString('en-GB', {
@@ -18,6 +19,7 @@ function formatDate(timestamp) {
   });
 }
 
+// Shows a patient's own details plus their bookings, trade-ins and coupons
 function Profile() {
   const [authChecked, setAuthChecked] = useState(false);
   const [user, setUser] = useState(null);
@@ -31,6 +33,8 @@ function Profile() {
   const [loadingBookings, setLoadingBookings] = useState(true);
   const [coupons, setCoupons] = useState([]);
   const [loadingCoupons, setLoadingCoupons] = useState(true);
+  const [revealedCoupons, setRevealedCoupons] = useState(new Set());
+  const [copiedId, setCopiedId] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -85,6 +89,7 @@ function Profile() {
       .finally(() => setLoadingCoupons(false));
   }, [user]);
 
+  // Sends the user a Firebase password-reset email
   const handleChangePassword = async () => {
     setResetStatus('');
     setResetLoading(true);
@@ -98,10 +103,35 @@ function Profile() {
     }
   };
 
+  // Logs the user out and sends them back to the login page
   const handleSignOut = async () => {
     setSigningOut(true);
     await signOut(auth);
     navigate('/login');
+  };
+
+  // Shows or re-hides a coupon code so it isn't left visible to anyone nearby
+  const toggleCouponCode = (couponId) => {
+    setRevealedCoupons((current) => {
+      const next = new Set(current);
+      if (next.has(couponId)) {
+        next.delete(couponId);
+      } else {
+        next.add(couponId);
+      }
+      return next;
+    });
+  };
+
+  // Copies a coupon code to the clipboard and briefly confirms it
+  const handleCopyCode = async (couponId) => {
+    try {
+      await navigator.clipboard.writeText(couponId);
+      setCopiedId(couponId);
+      setTimeout(() => setCopiedId(''), 2000);
+    } catch {
+      // Clipboard access unavailable — nothing more we can do here.
+    }
   };
 
   if (!authChecked) {
@@ -234,11 +264,31 @@ function Profile() {
 
         {coupons.map((coupon) => {
           const meta = couponStatusMeta[coupon.status] || couponStatusMeta.active;
+          const isRevealed = revealedCoupons.has(coupon.id);
           return (
             <div className="profile-booking-row" key={coupon.id}>
               <div className="profile-booking-info">
                 <h5>{coupon.percentOff}% off &middot; {coupon.deviceModel}</h5>
-                <p>Code: {coupon.id}</p>
+                <div className="profile-coupon-code">
+                  <span className="profile-coupon-code-value">
+                    {isRevealed ? coupon.id : '•'.repeat(coupon.id.length)}
+                  </span>
+                  <button
+                    type="button"
+                    className="profile-coupon-toggle"
+                    onClick={() => toggleCouponCode(coupon.id)}
+                    aria-label={isRevealed ? 'Hide code' : 'Show code'}
+                  >
+                    <i className={`fa-solid ${isRevealed ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                  </button>
+                  <button
+                    type="button"
+                    className="profile-coupon-copy"
+                    onClick={() => handleCopyCode(coupon.id)}
+                  >
+                    {copiedId === coupon.id ? 'Copied!' : 'Copy Code'}
+                  </button>
+                </div>
               </div>
               <span className={`booking-status ${meta.className}`}>
                 <i className={`fa-solid ${meta.icon}`}></i> {meta.label}

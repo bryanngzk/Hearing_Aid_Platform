@@ -7,6 +7,7 @@ import { statusMeta } from '../data/bookings.js'
 import { tabs } from '../data/tabs.js'
 import { slotDocId } from '../data/clinics.js'
 
+// Lists a patient's own bookings, with reschedule/cancel actions
 function Booking() {
   const [authChecked, setAuthChecked] = useState(false);
   const [user, setUser] = useState(null);
@@ -16,6 +17,7 @@ function Booking() {
   const [loadingBookings, setLoadingBookings] = useState(true);
   const [cancelingId, setCancelingId] = useState('');
   const [cancelError, setCancelError] = useState('');
+  const [confirmingId, setConfirmingId] = useState('');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -37,8 +39,10 @@ function Booking() {
       .finally(() => setLoadingBookings(false));
   }, [user]);
 
+  // Cancels a booking and frees up its time slot for other patients
   const handleCancel = async (booking) => {
     setCancelError('');
+    setConfirmingId('');
     setCancelingId(booking.id);
     try {
       const batch = writeBatch(db);
@@ -121,25 +125,46 @@ function Booking() {
                 <i className="fa-solid fa-clock"></i> {booking.time}
               </p>
 
-              <div className="booking-actions">
-                {booking.status === 'upcoming' && (
-                  <>
-                    <Link to={`/booking/new?reschedule=${booking.id}`}>
-                      <button className="normal">Reschedule</button>
-                    </Link>
+              {confirmingId === booking.id ? (
+                <div className="booking-confirm">
+                  <p className="booking-confirm-text">Are you sure you want to cancel this appointment?</p>
+                  <div className="booking-actions">
                     <button
                       className="normal booking-cancel"
                       disabled={cancelingId === booking.id}
                       onClick={() => handleCancel(booking)}
                     >
-                      {cancelingId === booking.id ? 'Cancelling...' : 'Cancel'}
+                      {cancelingId === booking.id ? 'Cancelling...' : 'Yes, Cancel'}
                     </button>
-                  </>
-                )}
-                {booking.status !== 'upcoming' && (
-                  <button className="normal">View Details</button>
-                )}
-              </div>
+                    <button
+                      className="normal"
+                      disabled={cancelingId === booking.id}
+                      onClick={() => setConfirmingId('')}
+                    >
+                      No, Keep It
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="booking-actions">
+                  {booking.status === 'upcoming' && (
+                    <>
+                      <Link to={`/booking/new?reschedule=${booking.id}`}>
+                        <button className="normal">Reschedule</button>
+                      </Link>
+                      <button
+                        className="normal booking-cancel"
+                        onClick={() => setConfirmingId(booking.id)}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  )}
+                  {booking.status !== 'upcoming' && (
+                    <button className="normal">View Details</button>
+                  )}
+                </div>
+              )}
             </div>
           );
         })}

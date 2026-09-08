@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../firebase'
 
+// Shows the login form and signs a patient/clinic account in
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,6 +11,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Signs the user in with Firebase Auth and sends them to the homepage
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');

@@ -13,7 +13,10 @@ import Profile from './pages/Profile.jsx'
 import ClinicApproval from './pages/ClinicApproval.jsx'
 import TradeInDetail from './pages/TradeInDetail.jsx'
 import RedeemCoupon from './pages/RedeemCoupon.jsx'
+import ClinicBookings from './pages/ClinicBookings.jsx'
+import ClinicListings from './pages/ClinicListings.jsx'
 
+// Wraps every page with the header/footer and wires up all the app's routes
 function App() {
   return (
     <>
@@ -31,6 +34,8 @@ function App() {
         <Route path="/clinic-approval" element={<ClinicApproval />} />
         <Route path="/clinic-approval/:tradeInId" element={<TradeInDetail />} />
         <Route path="/redeem-coupon" element={<RedeemCoupon />} />
+        <Route path="/clinic-bookings" element={<ClinicBookings />} />
+        <Route path="/clinic-listings" element={<ClinicListings />} />
       </Routes>
       <Footer />
     </>

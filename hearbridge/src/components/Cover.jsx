@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const slides = [
   {
     id: 'trade-in',
-    image: '/img/phonakhearingaids.jpg',
+    image: '/img/banner/phonakhearingaids.jpg',
     eyebrow: 'Trade-in offer',
     title: 'Trade-in hearing aids now to get',
     highlight: 'up to 50% off on all hearing aids!',
@@ -13,7 +13,7 @@ const slides = [
   },
   {
     id: 'new-arrivals',
-    image: '',
+    image: '/img/banner/banner2.png',
     eyebrow: 'New arrivals',
     title: 'Discover our newest lineup of',
     highlight: 'smarter, smaller hearing aids',
@@ -22,29 +22,22 @@ const slides = [
   },
   {
     id: 'articles',
-    image: '',
+    image: '/img/banner/banner3.jpeg',
     eyebrow: 'HearBridge journal',
     title: 'Get expert advice on',
     highlight: 'living well with hearing loss',
     text: 'Read the latest articles from our audiology team.',
     cta: { label: 'Read Articles', href: '#' },
   },
-  {
-    id: 'booking',
-    image: '',
-    eyebrow: 'Free consultation',
-    title: 'Not sure what fits you? Book a',
-    highlight: 'free hearing consultation today',
-    text: 'Our specialists will help you find the right device.',
-    cta: { label: 'Book Now', to: '/listings' },
-  },
 ];
 
 const AUTOPLAY_MS = 6000;
 
+// Rotating hero banner at the top of the homepage, cycling through promo slides
 function Cover() {
   const [index, setIndex] = useState(0);
 
+  // Jumps to a specific slide, wrapping around at either end
   const goTo = useCallback((i) => {
     setIndex((i + slides.length) % slides.length);
   }, []);

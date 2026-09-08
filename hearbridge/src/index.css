@@ -247,10 +247,16 @@ body {
 
 #cover h4{
     padding-bottom: 15px;
+    color: #fff;
 }
 
 #cover h1{
     color: #088178;
+}
+
+#cover h2,
+#cover p {
+    color: #fff;
 }
 
 .cover-dots{
@@ -387,7 +393,7 @@ body {
 }
 
 #banner {
-    background-image: url("img/banner/banner1.jpeg");
+    background-image: url("/img/banner/banner1.jpeg");
     width: 100%;
     height: 40vh;
     background-size: cover;
@@ -397,6 +403,10 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
+}
+
+#banner h2 {
+    color: #222;
 }
 
 #banner button:hover {
@@ -532,7 +542,7 @@ footer a:hover {
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    background-image: url("img/banner/banner3.png");
+    background-image: url("/img/banner/banner3.png");
     background-size: cover;
     padding: 14px;
 }
@@ -1090,6 +1100,19 @@ footer a:hover {
     background: #fff;
     border: 1px solid #c0392b;
     color: #c0392b;
+}
+
+#booking .booking-confirm {
+    padding-top: 15px;
+    border-top: 1px dashed #cce7d0;
+    margin-top: 15px;
+}
+
+#booking .booking-confirm-text {
+    font-size: 13px;
+    color: #1a1a1a;
+    font-weight: 600;
+    margin-bottom: 10px;
 }
 
 /* Trade-In Page */
@@ -1857,6 +1880,11 @@ footer a:hover {
 
 /* Listing Page */
 
+#listing .listing-empty {
+    color: #606063;
+    padding: 20px 0;
+}
+
 #listing .listing-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -2077,6 +2105,49 @@ footer a:hover {
     margin-top: 30px;
 }
 
+#profile .profile-coupon-code {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+#profile .profile-coupon-code-value {
+    font-family: monospace;
+    font-size: 13px;
+    color: #606063;
+    letter-spacing: 1px;
+}
+
+#profile .profile-coupon-toggle {
+    background: none;
+    border: none;
+    color: #606063;
+    cursor: pointer;
+    padding: 2px 4px;
+    font-size: 13px;
+}
+
+#profile .profile-coupon-toggle:hover {
+    color: #088178;
+}
+
+#profile .profile-coupon-copy {
+    border: 1px solid #cce7d0;
+    background: #fff;
+    color: #088178;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+#profile .profile-coupon-copy:hover {
+    background: #e8f6ea;
+}
+
 /* Product Detail Page */
 
 #product-detail .product-detail-card {
@@ -2124,6 +2195,7 @@ footer a:hover {
     color: #465b52;
     line-height: 1.6;
     max-width: 500px;
+    white-space: pre-line;
 }
 
 #product-detail .product-detail-book {
@@ -2537,5 +2609,214 @@ footer a:hover {
         width: 100%;
         padding-top: 30px;
     }
+}
+
+/* Clinic Bookings Page */
+
+#clinic-bookings .clinic-bookings-tabs {
+    display: flex;
+    gap: 10px;
+    padding: 20px 0;
+    flex-wrap: wrap;
+}
+
+#clinic-bookings .clinic-bookings-tab {
+    border: 1px solid #cce7d0;
+    background: #fff;
+    color: #1a1a1a;
+    padding: 8px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+#clinic-bookings .clinic-bookings-tab:hover {
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+#clinic-bookings .clinic-bookings-tab.active {
+    background: #088178;
+    color: #fff;
+    border-color: #088178;
+}
+
+#clinic-bookings .clinic-bookings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#clinic-bookings .clinic-bookings-empty {
+    color: #606063;
+    padding: 20px 0;
+}
+
+#clinic-bookings .clinic-bookings-error {
+    color: #c0392b;
+    padding: 10px 0;
+}
+
+#clinic-bookings .clinic-bookings-card {
+    border: 1px solid #cce7d0;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 20px 20px 30px rgba(0, 0, 0, 0.02);
+    transition: 0.2s ease;
+}
+
+#clinic-bookings .clinic-bookings-card:hover {
+    box-shadow: 20px 20px 30px rgba(0, 0, 0, 0.06);
+}
+
+#clinic-bookings .clinic-bookings-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#clinic-bookings .booking-status {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+#clinic-bookings .booking-status.status-upcoming {
+    background: #e8f6ea;
+    color: #088178;
+}
+
+#clinic-bookings .booking-status.status-completed {
+    background: #eef0f5;
+    color: #606063;
+}
+
+#clinic-bookings .booking-status.status-cancelled {
+    background: #fbe7e7;
+    color: #c0392b;
+}
+
+#clinic-bookings .clinic-bookings-ref {
+    font-size: 12px;
+    color: #606063;
+}
+
+#clinic-bookings .clinic-bookings-card h5 {
+    font-size: 18px;
+    color: #1a1a1a;
+    padding-bottom: 6px;
+}
+
+#clinic-bookings .clinic-bookings-location,
+#clinic-bookings .clinic-bookings-patient,
+#clinic-bookings .clinic-bookings-datetime {
+    font-size: 14px;
+    color: #606063;
+    margin: 4px 0;
+}
+
+#clinic-bookings .clinic-bookings-datetime i:not(:first-child) {
+    margin-left: 15px;
+}
+
+#clinic-bookings .clinic-bookings-location i,
+#clinic-bookings .clinic-bookings-patient i,
+#clinic-bookings .clinic-bookings-datetime i {
+    color: #088178;
+    margin-right: 6px;
+}
+
+#clinic-bookings .clinic-bookings-complete {
+    margin-top: 12px;
+    padding: 8px 20px;
+    font-size: 13px;
+    background-color: #088178;
+    color: #fff;
+}
+
+/* Clinic Listings Page */
+
+#clinic-listings .clinic-listings-empty {
+    color: #606063;
+    padding: 20px 0;
+}
+
+#clinic-listings .clinic-listings-error {
+    color: #c0392b;
+    padding: 10px 0;
+}
+
+#clinic-listings .clinic-listings-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    padding-top: 10px;
+}
+
+#clinic-listings .clinic-listings-card {
+    padding: 12px;
+    border: 1px solid #cce7d0;
+    border-radius: 20px;
+    box-shadow: 20px 20px 30px rgba(0, 0, 0, 0.02);
+}
+
+#clinic-listings .clinic-listings-card img {
+    width: 100%;
+    border-radius: 12px;
+}
+
+#clinic-listings .clinic-listings-des {
+    padding-top: 10px;
+    text-align: start;
+}
+
+#clinic-listings .clinic-listings-brand {
+    color: #606063;
+    font-size: 12px;
+}
+
+#clinic-listings .clinic-listings-des h5 {
+    padding: 6px 0;
+    font-size: 15px;
+    color: #1a1a1a;
+}
+
+#clinic-listings .clinic-listings-price {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: #088178;
+    padding: 6px 0;
+}
+
+#clinic-listings .clinic-listings-status {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+#clinic-listings .clinic-listings-status.status-available {
+    background: #e8f6ea;
+    color: #088178;
+}
+
+#clinic-listings .clinic-listings-status.status-sold {
+    background: #eef0f5;
+    color: #606063;
+}
+
+#clinic-listings .clinic-listings-toggle {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    font-size: 13px;
 }
 

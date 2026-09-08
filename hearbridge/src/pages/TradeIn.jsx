@@ -3,16 +3,18 @@ import { Link } from 'react-router-dom'
 import { onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from '../firebase'
-import { compressImage } from '../utils/image.js'
+import { compressImage, ensureDecodable } from '../utils/image.js'
 
 const conditions = ['Refurbished', 'Acceptable', 'Good', 'Very Good', 'Excellent'];
 
+// Makes up a short, readable id for a new trade-in, e.g. TI-ABC123-XYZ
 function generateTradeInId() {
   const timestamp = Date.now().toString(36).toUpperCase();
   const random = Math.random().toString(36).slice(2, 5).toUpperCase();
   return `TI-${timestamp}-${random}`;
 }
 
+// Shows the form a donor fills in to submit a hearing aid for trade-in
 function TradeIn() {
   const [authChecked, setAuthChecked] = useState(false);
   const [user, setUser] = useState(null);
@@ -48,15 +50,29 @@ function TradeIn() {
     };
   }, [photos]);
 
-  const handlePhotosChange = (e) => {
+  // Converts any HEIC photos to JPEG and builds the preview thumbnails
+  const handlePhotosChange = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
+
+    setError('');
+    const prepared = [];
+    for (const file of files) {
+      try {
+        const decodable = await ensureDecodable(file);
+        prepared.push({ file: decodable, url: URL.createObjectURL(decodable) });
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+
     setPhotos((current) => {
       current.forEach((photo) => URL.revokeObjectURL(photo.url));
-      return files.map((file) => ({ file, url: URL.createObjectURL(file) }));
+      return prepared;
     });
   };
 
+  // Removes one selected photo before the form is submitted
   const removePhoto = (index) => {
     setPhotos((current) => {
       const next = [...current];
@@ -66,6 +82,7 @@ function TradeIn() {
     });
   };
 
+  // Compresses the photos and saves the trade-in request to Firestore
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -169,7 +186,7 @@ function TradeIn() {
             id="photos"
             className="trade-in-file-input"
             type="file"
-            accept="image/*"
+            accept="image/*,.heic,.heif"
             multiple
             onChange={handlePhotosChange}
           />

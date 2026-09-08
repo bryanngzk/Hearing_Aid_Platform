@@ -1,3 +1,4 @@
+// Bottom footer with contact/social links, shown on every page
 function Footer() {
   return (
     <footer className="section-p1">

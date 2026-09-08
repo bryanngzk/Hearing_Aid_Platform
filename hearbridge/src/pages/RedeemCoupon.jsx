@@ -4,6 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../firebase'
 
+// Turns a Firestore timestamp into a readable UK date, e.g. "05 Sep 2026"
 function formatDate(timestamp) {
   if (!timestamp) return 'Just now';
   return timestamp.toDate().toLocaleDateString('en-GB', {
@@ -14,6 +15,7 @@ function formatDate(timestamp) {
 }
 
 // To access this page, on the link insert '/redeem-coupon'
+// Clinic-only page to look up a donor's coupon code and mark it redeemed
 function RedeemCoupon() {
   const [authChecked, setAuthChecked] = useState(false);
   const [user, setUser] = useState(null);
@@ -43,6 +45,7 @@ function RedeemCoupon() {
     return unsubscribe;
   }, []);
 
+  // Looks up a coupon by its code
   const handleLookup = async (e) => {
     e.preventDefault();
     setLookupError('');
@@ -66,6 +69,7 @@ function RedeemCoupon() {
     }
   };
 
+  // Marks the coupon as redeemed so it can't be used again
   const handleRedeem = async () => {
     setRedeemError('');
     setRedeeming(true);
