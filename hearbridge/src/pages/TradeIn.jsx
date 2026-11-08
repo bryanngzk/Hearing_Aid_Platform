@@ -155,7 +155,7 @@ function TradeIn() {
           <input
             id="device-model"
             type="text"
-            placeholder="e.g. Phonak Audéo Paradise P90"
+            placeholder="e.g. Audéo Paradise P90"
             value={deviceModel}
             onChange={(e) => setDeviceModel(e.target.value)}
             required
